@@ -6,7 +6,6 @@ import (
 	"net"
 	"net/http"
 	"os"
-	"strconv"
 	"strings"
 )
 
@@ -50,8 +49,8 @@ func setHeader(w http.ResponseWriter, r *http.Request, statusCode int) {
 	}
 
 	// 3 record ip and status code
-	fmt.Println("IP: ", ip, "Status: ", statusCode)
-	io.WriteString("welcome!")
+	fmt.Println("the IP of this request is: ", ip, "The Status of the request is: ", statusCode)
+	io.WriteString(w, "welcome to healthz!")
 }
 
 func getIP(r *http.Request) (string, error) {
