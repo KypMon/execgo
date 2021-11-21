@@ -11,7 +11,7 @@ import (
 
 func main() {
 	// provide an default env variable
-	os.Setenv("VERSION", "1.0.0")
+	//os.Setenv("VERSION", "1.0.0")
 
 	http.HandleFunc("/healthz", healthz)
 
