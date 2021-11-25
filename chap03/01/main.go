@@ -11,13 +11,22 @@ import (
 
 func main() {
 	// provide an default env variable
-	//os.Setenv("VERSION", "1.0.0")
 
 	http.HandleFunc("/healthz", healthz)
 
-	fmt.Println("Listening 8080:")
+	_, isPortPresent := os.LookupEnv("PORT")
+	if !isPortPresent {
+		os.Setenv("PORT", "8080")
+	}
 
-	http.ListenAndServe(":8080", nil)
+	_, isVersionPresent := os.LookupEnv("VERSION")
+	if !isVersionPresent {
+		os.Setenv("VERSION", "1.4.0")
+	}
+
+	fmt.Println("Listening " + os.Getenv("PORT") + ": ")
+
+	http.ListenAndServe(":"+os.Getenv("PORT"), nil)
 }
 
 func healthz(w http.ResponseWriter, r *http.Request) {
