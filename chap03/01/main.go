@@ -6,13 +6,27 @@ import (
 	"net"
 	"net/http"
 	"os"
+	"strconv"
 	"strings"
 )
 
-func main() {
-	// provide an default env variable
+var levelMap = make(map[int]string)
 
+func main() {
+	// initialize log level
+	levelMap[0] = "[SYSTEM] "
+	levelMap[1] = "[INFO] "
+	levelMap[2] = "[WARNING] "
+	levelMap[3] = "[ERROR] "
+
+	// HANDLER
 	http.HandleFunc("/healthz", healthz)
+
+	// provide an default env variable
+	_, isLogLevelPresent := os.LookupEnv("LOG_LEVEL")
+	if !isLogLevelPresent {
+		os.Setenv("LOG_LEVEL", "0")
+	}
 
 	_, isPortPresent := os.LookupEnv("PORT")
 	if !isPortPresent {
@@ -24,9 +38,21 @@ func main() {
 		os.Setenv("VERSION", "1.4.0")
 	}
 
-	fmt.Println("Listening " + os.Getenv("PORT") + ": ")
+	//fmt.Println("Listening " + os.Getenv("PORT") + ": ", 2)
+
+	logger("Listening "+os.Getenv("PORT")+": ", 1)
 
 	http.ListenAndServe(":"+os.Getenv("PORT"), nil)
+}
+
+func logger(msg string, logLevel int) {
+
+	lvl, _ := strconv.Atoi(os.Getenv("LOG_LEVEL"))
+
+	// if this message log level is higher/more verbose than the preset level, then output
+	if logLevel >= lvl {
+		fmt.Println(levelMap[logLevel] + msg)
+	}
 }
 
 func healthz(w http.ResponseWriter, r *http.Request) {
@@ -50,7 +76,7 @@ func setHeader(w http.ResponseWriter, r *http.Request, statusCode int) {
 	w.Header().Set("VERSION", os.Getenv("VERSION"))
 
 	ip, err := getIP(r)
-	fmt.Println(ip)
+	//fmt.Println(ip)
 
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
@@ -58,7 +84,8 @@ func setHeader(w http.ResponseWriter, r *http.Request, statusCode int) {
 	}
 
 	// 3 record ip and status code
-	fmt.Println("the IP of this request is: ", ip, "The Status of the request is: ", statusCode)
+	logger("the IP of this request is: "+ip+"The Status of the request is: "+strconv.Itoa(statusCode), 1)
+
 	io.WriteString(w, "welcome to healthz!")
 }
 

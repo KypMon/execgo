@@ -31,10 +31,15 @@ spec:
       # Gracefully Stop
       terminationGracePeriodSeconds: 10
 
+      # logs
+      volumes:
+      - name: log-volume
+        emptyDir: {}
+
       # Containers
       containers:
       - name: cncamp-go-server
-        image: puyuyang/golearning:chap08
+        image: puyuyang/golearning:chap08.1
         ports:
         - containerPort: 8080
         # Probe section
@@ -76,7 +81,7 @@ spec:
         # Config Section
         env:
           - name: LOG_LEVEL
-            value: info
+            value: "0"
           - name: VERSION
             valueFrom:
               configMapKeyRef:
@@ -87,6 +92,9 @@ spec:
               configMapKeyRef:
                 name: http-config
                 key: port
+        volumeMounts:
+          - mountPath: /var/log
+            name: log-volume
 ---
 apiVersion: v1
 kind: Service
