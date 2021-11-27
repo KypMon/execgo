@@ -4,6 +4,7 @@ kind: Ingress
 metadata:
   name: cncamp
   annotations:
+    # use cert-manager and let's encrypt to create the ssl instead of manually
     cert-manager.io/cluster-issuer: letsencrypt-staging
     kubernetes.io/ingress.class: "nginx"
 spec:
