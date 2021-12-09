@@ -10,6 +10,10 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/prometheus/client_golang/prometheus/promhttp"
+
+	"github.com/cncamp/golang/httpserver/metrics"
 )
 
 var levelMap = make(map[int]string)
@@ -24,6 +28,7 @@ func main() {
 	// HANDLER
 	http.HandleFunc("/", rootHandler)
 	http.HandleFunc("/healthz", healthz)
+	http.HandleFunc("/metrics", promhttp.Handler)
 
 	// provide an default env variable
 	_, isLogLevelPresent := os.LookupEnv("LOG_LEVEL")
