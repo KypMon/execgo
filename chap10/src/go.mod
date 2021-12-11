@@ -1,4 +1,4 @@
-module goexercise/chap03/01
+module main
 
 go 1.17
 
