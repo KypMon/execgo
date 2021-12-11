@@ -80,5 +80,10 @@ helm upgrade --install loki grafana/loki-stack --set grafana.enabled=true,promet
 
 
 
+```shell
+k get secrets loki-grafana  -o jsonpath="{.data.admin-user}" | base64 -d
+
+k get secrets loki-grafana  -o jsonpath="{.data.admin-password}" | base64 -d
+```
 
 import the json to the grafana dashboard: https://github.com/cncamp/101/raw/master/module10/httpserver/grafana-dashboard/httpserver-latency.json

@@ -3,7 +3,9 @@ FROM golang:alpine as builder
 RUN mkdir /app
 WORKDIR /app
 COPY ./main.go ./main.go
-RUN go build ./main.go
+COPY ./go.mod ./go.mod
+RUN go get .
+RUN go build -i -o main -v
 
 FROM alpine
 RUN mkdir /app
