@@ -72,7 +72,11 @@ func randInt(min int, max int) int {
 
 func rootHandler(w http.ResponseWriter, r *http.Request) {
 
-	// #1: add delay here
+	// register delay metrics
+	timer := NewTimer()
+	defer timer.ObserveTotal()
+	
+	// add delay here
 	delay := randInt(0, 2000)
 	fmt.Printf("Sleeping %d milliseconds...\n", delay)
 	time.Sleep(time.Millisecond * time.Duration(delay))
