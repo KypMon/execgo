@@ -1,4 +1,6 @@
-# deploy nginx ingress controller
+# CHAP 08
+
+## deploy nginx ingress controller
 Replace all the k8s.gcr.io/ingress-nginx image to docker hub
 ```
 # FROM 
@@ -22,44 +24,44 @@ Deploy NGINX Ingress controller
 kubectl apply -f ./nginx-ingress-deployment.yaml
 ```
 
-# Deploy Cert Manager
+## Deploy Cert Manager
 ```
 kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v1.5.4/cert-manager.yaml
 kubectl apply -f ./cert-manager/clusterissuer.yaml
 ```
 
-# Deploy App and Service
+## Deploy App and Service
 ```
 kubectl apply -f ./spec.yaml
 ```
 
-# Deploy Ingress
+## Deploy Ingress
 ```
 kubectl apply -f ./ingress.yaml
 ```
 
-# check if the ingress is up and ready
+## check if the ingress is up and ready
 ```
 kubectl get ing 
 ```
 should have an IP address in Address column
 
-# get the IP for the host
+## get the IP for the host
 ```
 k get svc ingress-nginx-controller  -n ingress-nginx
 ```
-returns 
+returns
 ```
 NAME                       TYPE       CLUSTER-IP     EXTERNAL-IP   PORT(S)                      AGE
 ingress-nginx-controller   NodePort   10.107.78.92   <none>        80:32510/TCP,443:31154/TCP   123m
 ```
 
-# send the request to the host
+## send the request to the host
 ```
 curl -H "Host: cncamp.com" https://10.107.78.92/healthz -v -k
 ```
 
-returns 
+returns
 
 ```
 welcome to healthz!
