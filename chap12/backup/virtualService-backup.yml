@@ -1,0 +1,17 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: cncamp-istio-virtualservice
+spec:
+  gateways:
+    - cncamp-istio-gateway
+  hosts:
+    - cncamp.com
+  http:
+    - match:
+        - port: 443
+      route:
+        - destination:
+            host: cncamp.default.svc.cluster.local
+            port:
+              number: 80

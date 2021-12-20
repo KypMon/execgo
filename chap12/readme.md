@@ -160,3 +160,39 @@ curl --resolve cncamp.com:443:10.97.74.3 https://cncamp.com/healthz -v -k
 * Connection #0 to host cncamp.com left intact
 welcome to healthz!
 ```
+
+## HTTP based canary 
+```shell
+# deploy v2 app and v1 app with label
+k apply -f ./k8sspec/spec.yaml
+k apply -f ./k8sspec/spec-v2.yaml
+
+# add canary virtual service
+k apply -f ./istiospec/advance-route/virtualService-routing.yml
+
+# start a common debug pod
+k run doks-debug --image=digitalocean/doks-debug --rm -it --restart=Never bash
+
+# inside of doks-debug
+curl cncamp
+
+# > welcome to home page
+
+curl cncamp -H "user: cncamp"
+
+# > welcome to home page V2!
+```
+
+## Telemetry
+```shell
+k apply -f ./istiospec/jaeger.yml
+k edit configmap istio -n istio-system
+# and set tracing.sampling=100
+
+ki edit svc tracing
+# from ClusterIP to NodePort
+
+# in browser go http://192.168.34.2:31303/
+```
+
+# Jaeger Image here
