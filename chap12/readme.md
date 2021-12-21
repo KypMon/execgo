@@ -46,7 +46,7 @@ king get svc
 
 ## Apply the istio specs
 ```
-k apply -f ./istiospec/ingress.yaml
+k apply -f ./istiospec/basic/ingress.yaml
 ```
 
 try to get the page from MacBook
@@ -89,12 +89,12 @@ welcome to home page!* Closing connection 0
 ```shell
 openssl req -x509 -sha256 -nodes -days 365 -newkey rsa:2048 -subj '/O=cncamp Inc./CN=*.cncamp.com' -keyout cncamp.com.key -out cncamp.com.crt
 
-kubectl create -n istio-ingress secret tls cncamp-istio-credential --key=cncamp.com.key --cert=cncamp.com.crt
+k create -n istio-ingress secret tls cncamp-istio-credential --key=cncamp.com.key --cert=cncamp.com.crt
 ```
 
 ## apply the new ssl enabled ingress spec
 ```
-k apply -f ./istiospec/ingress-with-cert.yml
+k apply -f ./istiospec/https/ingress-with-cert.yml
 
 curl --resolve cncamp.com:443:10.97.74.3 https://cncamp.com/healthz -v -k
 ```
@@ -185,7 +185,7 @@ curl cncamp -H "user: cncamp"
 
 ## Telemetry
 ```shell
-k apply -f ./istiospec/jaeger.yml
+k apply -f ./istiospec/telemetry/jaeger.yml
 k edit configmap istio -n istio-system
 # and set tracing.sampling=100
 
@@ -195,4 +195,4 @@ ki edit svc tracing
 # in browser go http://192.168.34.2:31303/
 ```
 
-# Jaeger Image here
+![](./img/jaeger.png)
